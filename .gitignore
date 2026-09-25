@@ -1,0 +1,60 @@
+# ============================================================
+# SmartStock Agentic AI — .gitignore
+# ============================================================
+
+# ── SECRETS (kabhi bhi commit mat karo!) ─────────────────────
+.env
+.env.*
+!.env.example
+
+# Gmail OAuth token (runtime pe generate hota hai)
+token.pickle
+credentials.json
+
+# ── Python cache ──────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+.Python
+
+# ── Virtual environments ──────────────────────────────────────
+.venv/
+venv/
+env/
+ENV/
+.conda/
+
+# ── ChromaDB vector store (local data, runtime generated) ────
+chat_memory/
+
+# ── IDE / Editor ──────────────────────────────────────────────
+.idea/
+.vscode/
+*.swp
+*.swo
+*.suo
+*.user
+
+# ── OS junk ───────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Logs ──────────────────────────────────────────────────────
+*.log
+logs/
+
+# ── Temp / scratch ────────────────────────────────────────────
+1.txt
+scratch/
+*.tmp
+
+# ── Build artifacts ───────────────────────────────────────────
+dist/
+build/
+*.egg-info/
+
+# ── Docker volumes (local) ───────────────────────────────────
+.docker/

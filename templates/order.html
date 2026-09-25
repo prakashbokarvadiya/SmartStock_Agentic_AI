@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Management — ElectraStore</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root{--bg:#0a0f1e;--surface:#111827;--surface2:#1a2235;--surface3:#1f2d45;--border:rgba(255,255,255,0.07);--accent:#6366f1;--accent2:#8b5cf6;--green:#10b981;--red:#ef4444;--amber:#f59e0b;--text:#f1f5f9;--muted:#94a3b8;--radius:14px;--shadow:0 8px 32px rgba(0,0,0,0.4)}
+        *{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+        .navbar{position:sticky;top:0;z-index:100;background:rgba(10,15,30,0.88);backdrop-filter:blur(18px);border-bottom:1px solid var(--border);padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between}
+        .navbar-brand{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:700;background:linear-gradient(135deg,#6366f1,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:6px}
+        .nav-links a{text-decoration:none;color:var(--muted);padding:8px 16px;border-radius:8px;font-size:14px;font-weight:500;transition:all .2s;border:1px solid transparent}
+        .nav-links a:hover{color:var(--text);background:var(--surface2);border-color:var(--border)}
+        .nav-links a.active{color:var(--text);background:var(--surface3);border-color:var(--accent)}
+        .hero{background:linear-gradient(135deg,#0c1a2e 0%,#0f172a 50%,#0a0f1e 100%);padding:48px 40px 36px;border-bottom:1px solid var(--border);position:relative;overflow:hidden}
+        .hero::before{content:'';position:absolute;top:-60px;right:-60px;width:280px;height:280px;background:radial-gradient(circle,rgba(16,185,129,.12) 0%,transparent 70%);border-radius:50%;pointer-events:none}
+        .hero h1{font-size:30px;font-weight:800;letter-spacing:-.5px}
+        .hero p{color:var(--muted);margin-top:6px;font-size:14px}
+        .hero-stats{display:flex;gap:16px;margin-top:24px;flex-wrap:wrap}
+        .stat-pill{background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:30px;padding:8px 18px;font-size:13px;color:var(--muted);display:flex;align-items:center;gap:8px}
+        .stat-pill strong{color:var(--text);font-weight:600}
+        .container{max-width:1400px;margin:0 auto;padding:32px 40px 60px}
+        #toast{position:fixed;top:80px;right:24px;z-index:9999;padding:14px 20px;border-radius:12px;font-size:14px;font-weight:500;display:flex;align-items:center;gap:10px;opacity:0;transform:translateX(40px);transition:all .35s cubic-bezier(.4,0,.2,1);pointer-events:none;min-width:280px;box-shadow:0 8px 32px rgba(0,0,0,.5)}
+        #toast.show{opacity:1;transform:translateX(0)}
+        #toast.success{background:#064e3b;border:1px solid #10b981;color:#6ee7b7}
+        #toast.error{background:#450a0a;border:1px solid #ef4444;color:#fca5a5}
+        .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px;margin-bottom:24px;box-shadow:var(--shadow)}
+        .card.edit-mode{border-color:var(--amber);box-shadow:0 0 0 1px var(--amber),var(--shadow)}
+        .card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+        .card-title{font-size:16px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:10px}
+        .card-title .icon{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#10b981,#059669);display:flex;align-items:center;justify-content:center;font-size:16px}
+        .form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+        .form-group{display:flex;flex-direction:column;gap:7px}
+        .form-group label{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
+        .form-group input,.form-group select{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:14px;color:var(--text);font-family:'Inter',sans-serif;transition:all .2s;outline:none;-webkit-appearance:none}
+        .form-group input::placeholder{color:#475569}
+        .form-group select option{background:#1a2235;color:var(--text)}
+        .form-group input:focus,.form-group select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(99,102,241,.15);background:var(--surface3)}
+        .form-group input[readonly]{opacity:.5;cursor:not-allowed}
+        .form-actions{margin-top:22px;display:flex;gap:10px}
+        .btn{display:inline-flex;align-items:center;gap:7px;padding:10px 20px;border-radius:10px;border:none;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s}
+        .btn:active{transform:scale(.97)}
+        .btn-primary{background:linear-gradient(135deg,#10b981,#059669);color:#fff;box-shadow:0 4px 14px rgba(16,185,129,.3)}
+        .btn-primary:hover{opacity:.9}
+        .btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border)}
+        .btn-ghost:hover{background:var(--surface2);color:var(--text)}
+        .btn-icon{padding:7px 12px;border-radius:8px;border:none;font-size:12px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;display:inline-flex;align-items:center;gap:5px}
+        .btn-edit{background:rgba(245,158,11,.12);color:#fbbf24;border:1px solid rgba(245,158,11,.25)}
+        .btn-edit:hover{background:rgba(245,158,11,.22)}
+        .btn-delete{background:rgba(239,68,68,.1);color:#f87171;border:1px solid rgba(239,68,68,.2)}
+        .btn-delete:hover{background:rgba(239,68,68,.2)}
+        .table-wrapper{overflow-x:auto}
+        table{width:100%;border-collapse:collapse;min-width:900px}
+        thead tr{background:linear-gradient(90deg,rgba(16,185,129,.1),rgba(5,150,105,.06));border-bottom:1px solid rgba(16,185,129,.25)}
+        th{padding:14px 16px;text-align:left;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;white-space:nowrap}
+        td{padding:14px 16px;font-size:14px;border-bottom:1px solid var(--border)}
+        tbody tr{transition:background .15s}
+        tbody tr:hover{background:rgba(255,255,255,.03)}
+        tbody tr:last-child td{border-bottom:none}
+        .id-badge{font-family:monospace;font-size:12px;padding:3px 8px;border-radius:5px;border:1px solid}
+        .order-id{background:rgba(16,185,129,.1);color:#34d399;border-color:rgba(16,185,129,.2)}
+        .cust-id{background:rgba(99,102,241,.1);color:#a5b4fc;border-color:rgba(99,102,241,.2)}
+        .prod-id{background:rgba(245,158,11,.1);color:#fbbf24;border-color:rgba(245,158,11,.2)}
+        .status{display:inline-block;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600}
+        .status-confirmed{background:rgba(59,130,246,.12);color:#93c5fd;border:1px solid rgba(59,130,246,.25)}
+        .status-processing{background:rgba(245,158,11,.12);color:#fbbf24;border:1px solid rgba(245,158,11,.25)}
+        .status-shipped{background:rgba(139,92,246,.12);color:#c4b5fd;border:1px solid rgba(139,92,246,.25)}
+        .status-delivered{background:rgba(16,185,129,.12);color:#6ee7b7;border:1px solid rgba(16,185,129,.25)}
+        .status-returned{background:rgba(168,85,247,.12);color:#d8b4fe;border:1px solid rgba(168,85,247,.25)}
+        .status-cancelled{background:rgba(239,68,68,.1);color:#fca5a5;border:1px solid rgba(239,68,68,.2)}
+        .actions{display:flex;gap:6px}
+        .empty-state{text-align:center;padding:60px 20px;color:var(--muted)}
+        .empty-state .ei{font-size:48px;margin-bottom:12px}
+        .search-bar{position:relative;width:260px}
+        .search-bar input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:9px 14px 9px 38px;font-size:13px;color:var(--text);outline:none;font-family:'Inter',sans-serif;transition:all .2s}
+        .search-bar input:focus{border-color:var(--accent);background:var(--surface3)}
+        .search-bar .si{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;pointer-events:none}
+        @media(max-width:900px){.form-grid{grid-template-columns:repeat(2,1fr)}.hero,.container{padding-left:20px;padding-right:20px}.navbar{padding:0 20px}}
+        @media(max-width:600px){.form-grid{grid-template-columns:1fr}}
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="navbar-brand">&#x26A1; ElectraStore</div>
+    <div class="nav-links">
+        <a href="/product">&#x1F4E6; Products</a>
+        <a href="/order" class="active">&#x1F6D2; Orders</a>
+        <a href="/agentic-ai">&#x1F916; AI Assistant</a>
+    </div>
+</nav>
+
+<div class="hero">
+    <h1>&#x1F6D2; Order Management</h1>
+    <p>Track and manage all customer orders across your electronics store.</p>
+    <div class="hero-stats">
+        <div class="stat-pill">&#x1F4CB; Total <strong>{{ orders | length }}</strong></div>
+        <div class="stat-pill">&#x1F7E2; Delivered <strong>{{ orders | selectattr("order_status","equalto","Delivered") | list | length }}</strong></div>
+        <div class="stat-pill">&#x1F504; Processing <strong>{{ orders | selectattr("order_status","equalto","Processing") | list | length }}</strong></div>
+        <div class="stat-pill">&#x1F6A8; Cancelled <strong>{{ orders | selectattr("order_status","equalto","Cancelled") | list | length }}</strong></div>
+    </div>
+</div>
+
+<div id="toast"></div>
+
+<div class="container">
+
+    <div id="orderFormCard" class="card">
+        <div class="card-header">
+            <div class="card-title">
+                <div class="icon">&#x270F;</div>
+                <span id="formTitle">Add New Order</span>
+            </div>
+        </div>
+        <form id="orderForm">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="order_id">Order ID</label>
+                    <input type="text" id="order_id" name="order_id" maxlength="10" placeholder="e.g. O1001" required>
+                </div>
+                <div class="form-group">
+                    <label for="customer_id">Customer ID</label>
+                    <input type="text" id="customer_id" name="customer_id" maxlength="10" placeholder="e.g. C101" required>
+                </div>
+                <div class="form-group">
+                    <label for="product_id">Product ID</label>
+                    <input type="text" id="product_id" name="product_id" maxlength="10" placeholder="e.g. P001" required>
+                </div>
+                <div class="form-group">
+                    <label for="quantity">Quantity</label>
+                    <input type="number" id="quantity" name="quantity" min="1" placeholder="e.g. 2" required>
+                </div>
+                <div class="form-group">
+                    <label for="order_date">Order Date</label>
+                    <input type="date" id="order_date" name="order_date" required>
+                </div>
+                <div class="form-group">
+                    <label for="order_status">Order Status</label>
+                    <select id="order_status" name="order_status" required>
+                        <option value="">Select Status</option>
+                        <option value="Confirmed">Confirmed</option>
+                        <option value="Processing">Processing</option>
+                        <option value="Shipped">Shipped</option>
+                        <option value="Delivered">Delivered</option>
+                        <option value="Returned">Returned</option>
+                        <option value="Cancelled">Cancelled</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="submit" id="submitButton" class="btn btn-primary">&#x2795; Add Order</button>
+                <button type="button" id="cancelButton" class="btn btn-ghost" style="display:none;" onclick="cancelEdit()">&#x2715; Cancel</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">
+                <div class="icon">&#x1F4CB;</div>
+                <span>All Orders</span>
+            </div>
+            <div class="search-bar">
+                <span class="si">&#x1F50D;</span>
+                <input type="text" id="searchInput" placeholder="Search orders..." oninput="filterTable()">
+            </div>
+        </div>
+        <div class="table-wrapper">
+            <table id="orderTable">
+                <thead>
+                    <tr>
+                        <th>Order ID</th><th>Customer</th><th>Product</th><th>Qty</th><th>Date</th><th>Status</th><th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="orderTableBody">
+                    {% if orders %}
+                        {% for order in orders %}
+                        <tr>
+                            <td><span class="id-badge order-id">{{ order.order_id }}</span></td>
+                            <td><span class="id-badge cust-id">{{ order.customer_id }}</span></td>
+                            <td><span class="id-badge prod-id">{{ order.product_id }}</span></td>
+                            <td style="font-weight:600">{{ order.quantity }}</td>
+                            <td style="color:var(--muted)">{{ order.order_date }}</td>
+                            <td>
+                                {% if order.order_status == "Confirmed" %}<span class="status status-confirmed">Confirmed</span>
+                                {% elif order.order_status == "Processing" %}<span class="status status-processing">Processing</span>
+                                {% elif order.order_status == "Shipped" %}<span class="status status-shipped">Shipped</span>
+                                {% elif order.order_status == "Delivered" %}<span class="status status-delivered">Delivered</span>
+                                {% elif order.order_status == "Returned" %}<span class="status status-returned">Returned</span>
+                                {% elif order.order_status == "Cancelled" %}<span class="status status-cancelled">Cancelled</span>
+                                {% else %}{{ order.order_status }}{% endif %}
+                            </td>
+                            <td>
+                                <div class="actions">
+                                    <button class="btn-icon btn-edit" onclick='editOrder({{ order.order_id|tojson }},{{ order.customer_id|tojson }},{{ order.product_id|tojson }},{{ order.quantity|tojson }},{{ order.order_date|tojson }},{{ order.order_status|tojson }})'>&#x270F; Edit</button>
+                                    <button class="btn-icon btn-delete" onclick='deleteOrder({{ order.order_id|tojson }})'>&#x1F5D1; Delete</button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr><td colspan="7"><div class="empty-state"><div class="ei">&#x1F4ED;</div><p>No orders found.</p></div></td></tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<script>
+function showToast(msg,type='success'){
+    const t=document.getElementById('toast');
+    t.textContent=(type==='success'?'✓ ':'✕ ')+msg;
+    t.className='show '+type;
+    setTimeout(()=>{t.className=''},4200);
+}
+function filterTable(){
+    const q=document.getElementById('searchInput').value.toLowerCase();
+    document.querySelectorAll('#orderTableBody tr').forEach(r=>{
+        r.style.display=r.textContent.toLowerCase().includes(q)?'':'none';
+    });
+}
+document.getElementById('orderForm').addEventListener('submit',async function(e){
+    e.preventDefault();
+    const oid=document.getElementById('order_id').value.trim();
+    const cid=document.getElementById('customer_id').value.trim();
+    const pid=document.getElementById('product_id').value.trim();
+    const qty=parseInt(document.getElementById('quantity').value);
+    const dt=document.getElementById('order_date').value;
+    const st=document.getElementById('order_status').value;
+    if(!oid)return showToast('Order ID is required.','error');
+    if(!cid)return showToast('Customer ID is required.','error');
+    if(!pid)return showToast('Product ID is required.','error');
+    if(isNaN(qty)||qty<=0)return showToast('Quantity must be greater than 0.','error');
+    if(!dt)return showToast('Order date is required.','error');
+    if(!st)return showToast('Please select order status.','error');
+    const isEdit=document.getElementById('submitButton').dataset.mode==='edit';
+    const btn=document.getElementById('submitButton');
+    btn.disabled=true;btn.textContent='Saving...';
+    try{
+        const res=await fetch(isEdit?'/order/update':'/order/add',{method:'POST',body:new FormData(this)});
+        const d=await res.json();
+        if(!res.ok)throw new Error(d.detail||'Something went wrong.');
+        showToast(d.message||'Success!');
+        setTimeout(()=>location.reload(),900);
+    }catch(err){
+        showToast(err.message,'error');
+        btn.disabled=false;
+        btn.textContent=isEdit?'Save Update':'+ Add Order';
+    }
+});
+function editOrder(oid,cid,pid,qty,dt,st){
+    document.getElementById('order_id').value=oid;
+    document.getElementById('customer_id').value=cid;
+    document.getElementById('product_id').value=pid;
+    document.getElementById('quantity').value=qty;
+    document.getElementById('order_date').value=dt;
+    document.getElementById('order_status').value=st;
+    document.getElementById('formTitle').textContent='Edit Order';
+    document.getElementById('submitButton').textContent='Save Update';
+    document.getElementById('submitButton').dataset.mode='edit';
+    document.getElementById('cancelButton').style.display='inline-flex';
+    document.getElementById('order_id').readOnly=true;
+    document.getElementById('orderFormCard').classList.add('edit-mode');
+    document.getElementById('orderFormCard').scrollIntoView({behavior:'smooth'});
+}
+function cancelEdit(){
+    document.getElementById('orderForm').reset();
+    document.getElementById('formTitle').textContent='Add New Order';
+    document.getElementById('submitButton').textContent='+ Add Order';
+    delete document.getElementById('submitButton').dataset.mode;
+    document.getElementById('cancelButton').style.display='none';
+    document.getElementById('order_id').readOnly=false;
+    document.getElementById('orderFormCard').classList.remove('edit-mode');
+}
+async function deleteOrder(oid){
+    if(!confirm(`Delete order ${oid}? This cannot be undone.`))return;
+    try{
+        const res=await fetch(`/order/delete/${encodeURIComponent(oid)}`,{method:'DELETE'});
+        const d=await res.json();
+        if(!res.ok)throw new Error(d.detail||'Unable to delete.');
+        showToast(d.message||'Order deleted.');
+        setTimeout(()=>location.reload(),900);
+    }catch(err){showToast(err.message,'error');}
+}
+</script>
+</body>
+</html>

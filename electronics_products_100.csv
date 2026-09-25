@@ -1,0 +1,101 @@
+product_id,product_name,category,brand,price,stock
+P001,Samsung Smart TV,Television,Samsung,45000,15
+P002,LG Double Door Fridge,Refrigerator,LG,38000,10
+P003,Redmi Note Mobile,Smartphone,Xiaomi,18000,30
+P004,Samsung Full HD LED TV,Television,Samsung,30956,33
+P005,LG UHD Smart TV,Television,LG,32695,40
+P006,LG OLED evo TV,Television,LG,34434,47
+P007,LG NanoCell TV,Television,LG,36173,8
+P008,LG Full HD Smart TV,Television,LG,37912,15
+P009,Sony BRAVIA 4K TV,Television,Sony,39651,22
+P010,Sony BRAVIA OLED TV,Television,Sony,41390,29
+P011,Sony Google LED TV,Television,Sony,43129,36
+P012,Sony Full HD TV,Television,Sony,44868,43
+P013,TCL QLED Google TV,Television,TCL,46607,50
+P014,TCL 4K UHD TV,Television,TCL,48346,11
+P015,TCL Mini LED TV,Television,TCL,50085,18
+P016,TCL Android TV,Television,TCL,51824,25
+P017,LG Double Door Fridge,Refrigerator,LG,51563,32
+P018,LG Single Door Fridge,Refrigerator,LG,53302,39
+P019,LG Side-by-Side Fridge,Refrigerator,LG,55041,46
+P020,LG Convertible Fridge,Refrigerator,LG,56780,7
+P021,Samsung Digital Inverter Fridge,Refrigerator,Samsung,58519,14
+P022,Samsung Double Door Fridge,Refrigerator,Samsung,60258,21
+P023,Samsung Side-by-Side Fridge,Refrigerator,Samsung,61997,28
+P024,Samsung French Door Fridge,Refrigerator,Samsung,63736,35
+P025,Whirlpool IntelliFresh Fridge,Refrigerator,Whirlpool,23475,42
+P026,Whirlpool Triple Door Fridge,Refrigerator,Whirlpool,25214,49
+P027,Whirlpool Single Door Fridge,Refrigerator,Whirlpool,26953,10
+P028,Whirlpool Convertible Fridge,Refrigerator,Whirlpool,28692,17
+P029,Godrej Edge Pro Fridge,Refrigerator,Godrej,30431,24
+P030,Godrej Double Door Fridge,Refrigerator,Godrej,32170,31
+P031,Godrej Single Door Fridge,Refrigerator,Godrej,33909,38
+P032,Godrej Side-by-Side Fridge,Refrigerator,Godrej,35648,45
+P033,Samsung Galaxy A15,Smartphone,Samsung,27387,6
+P034,Samsung Galaxy M34,Smartphone,Samsung,29126,13
+P035,Samsung Galaxy S24,Smartphone,Samsung,30865,20
+P036,Samsung Galaxy F55,Smartphone,Samsung,32604,27
+P037,Xiaomi Redmi Note 13,Smartphone,Xiaomi,34343,34
+P038,Xiaomi Redmi 13C,Smartphone,Xiaomi,36082,41
+P039,Xiaomi Xiaomi 14,Smartphone,Xiaomi,37821,48
+P040,Xiaomi Redmi Note 12 Pro,Smartphone,Xiaomi,39560,9
+P041,OnePlus Nord CE 4,Smartphone,OnePlus,41299,16
+P042,OnePlus OnePlus 12R,Smartphone,OnePlus,43038,23
+P043,OnePlus Nord 3,Smartphone,OnePlus,44777,30
+P044,OnePlus OnePlus 12,Smartphone,OnePlus,46516,37
+P045,Motorola Moto G64,Smartphone,Motorola,48255,44
+P046,Motorola Edge 50 Fusion,Smartphone,Motorola,49994,5
+P047,Motorola Moto G54,Smartphone,Motorola,51733,12
+P048,Motorola Razr 40,Smartphone,Motorola,53472,19
+P049,Apple iPhone 15,Smartphone,Apple,13211,26
+P050,Apple iPhone 14,Smartphone,Apple,14950,33
+P051,Apple iPhone 13,Smartphone,Apple,16689,40
+P052,Apple iPhone 15 Plus,Smartphone,Apple,18428,47
+P053,HP Pavilion 15 Laptop,Laptop,HP,46167,8
+P054,HP Victus Gaming Laptop,Laptop,HP,47906,15
+P055,HP Envy x360 Laptop,Laptop,HP,49645,22
+P056,HP 15s Notebook,Laptop,HP,51384,29
+P057,Dell Inspiron 15 Laptop,Laptop,Dell,53123,36
+P058,Dell Vostro 14 Laptop,Laptop,Dell,54862,43
+P059,Dell G15 Gaming Laptop,Laptop,Dell,56601,50
+P060,Dell XPS 13 Laptop,Laptop,Dell,58340,11
+P061,Lenovo IdeaPad Slim 3,Laptop,Lenovo,60079,18
+P062,Lenovo ThinkPad E14,Laptop,Lenovo,61818,25
+P063,Lenovo LOQ Gaming Laptop,Laptop,Lenovo,63557,32
+P064,Lenovo Yoga Slim 6,Laptop,Lenovo,65296,39
+P065,ASUS VivoBook 15,Laptop,ASUS,67035,46
+P066,ASUS TUF Gaming F15,Laptop,ASUS,68774,7
+P067,ASUS Zenbook 14,Laptop,ASUS,70513,14
+P068,ASUS ROG Strix G16,Laptop,ASUS,72252,21
+P069,LG Front Load Washer,Washing Machine,LG,53991,28
+P070,LG Top Load Washer,Washing Machine,LG,55730,35
+P071,LG Washer Dryer,Washing Machine,LG,57469,42
+P072,LG Semi Automatic Washer,Washing Machine,LG,59208,49
+P073,Samsung EcoBubble Front Load,Washing Machine,Samsung,18947,10
+P074,Samsung Top Load Washer,Washing Machine,Samsung,20686,17
+P075,Samsung AI Control Washer,Washing Machine,Samsung,22425,24
+P076,Samsung Semi Automatic Washer,Washing Machine,Samsung,24164,31
+P077,Daikin 1.5 Ton Inverter AC,Air Conditioner,Daikin,35903,38
+P078,Daikin 1 Ton Split AC,Air Conditioner,Daikin,37642,45
+P079,Daikin 2 Ton Inverter AC,Air Conditioner,Daikin,39381,6
+P080,Daikin Window AC,Air Conditioner,Daikin,41120,13
+P081,Voltas 1.5 Ton Split AC,Air Conditioner,Voltas,42859,20
+P082,Voltas 1 Ton Inverter AC,Air Conditioner,Voltas,44598,27
+P083,Voltas 2 Ton Split AC,Air Conditioner,Voltas,46337,34
+P084,Voltas Window AC,Air Conditioner,Voltas,48076,41
+P085,IFB Convection Microwave,Microwave,IFB,28815,48
+P086,IFB Solo Microwave,Microwave,IFB,30554,9
+P087,IFB Grill Microwave,Microwave,IFB,32293,16
+P088,IFB Steam Microwave,Microwave,IFB,34032,23
+P089,JBL Bluetooth Speaker,Audio,JBL,31271,30
+P090,JBL Soundbar,Audio,JBL,33010,37
+P091,JBL Wireless Headphones,Audio,JBL,34749,44
+P092,JBL Party Speaker,Audio,JBL,36488,5
+P093,Noise ColorFit Smartwatch,Smartwatch,Noise,37527,12
+P094,Noise Fit Pro Smartwatch,Smartwatch,Noise,39266,19
+P095,Noise Calling Smartwatch,Smartwatch,Noise,41005,26
+P096,Noise Sport Smartwatch,Smartwatch,Noise,42744,33
+P097,Canon EOS Mirrorless Camera,Camera,Canon,32683,40
+P098,Canon EOS DSLR Camera,Camera,Canon,34422,47
+P099,Canon PowerShot Camera,Camera,Canon,36161,8
+P100,Canon Vlog Camera,Camera,Canon,37900,15

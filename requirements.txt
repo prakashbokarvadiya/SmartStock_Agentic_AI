@@ -1,0 +1,29 @@
+fastapi==0.115.12
+uvicorn[standard]==0.34.2
+psycopg2-binary==2.9.10
+python-dotenv==1.1.0
+pydantic==2.11.4
+pydantic-settings>=2.0.0
+
+# Google AI / Gemini
+google-generativeai>=0.8.0
+google-genai>=1.0.0
+
+# LangGraph / LangChain
+langgraph>=0.2.0
+langchain-google-genai>=2.0.0
+langchain-core>=0.3.0
+
+# Database
+sqlalchemy>=2.0.0
+
+# ChromaDB (RAG / vector store)
+chromadb>=0.5.0
+
+# MCP (Model Context Protocol)
+mcp>=1.0.0
+
+# Gmail API / OAuth
+google-auth-oauthlib
+google-auth-httplib2
+google-api-python-client

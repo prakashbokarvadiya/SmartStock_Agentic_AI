@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Management — ElectraStore</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg:#0a0f1e;--surface:#111827;--surface2:#1a2235;--surface3:#1f2d45;
+            --border:rgba(255,255,255,0.07);--accent:#6366f1;--accent2:#8b5cf6;
+            --green:#10b981;--red:#ef4444;--amber:#f59e0b;
+            --text:#f1f5f9;--muted:#94a3b8;--radius:14px;--shadow:0 8px 32px rgba(0,0,0,0.4);
+        }
+        *{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+        .navbar{position:sticky;top:0;z-index:100;background:rgba(10,15,30,0.88);backdrop-filter:blur(18px);border-bottom:1px solid var(--border);padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between}
+        .navbar-brand{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:700;background:linear-gradient(135deg,#6366f1,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:6px}
+        .nav-links a{text-decoration:none;color:var(--muted);padding:8px 16px;border-radius:8px;font-size:14px;font-weight:500;transition:all .2s;border:1px solid transparent}
+        .nav-links a:hover{color:var(--text);background:var(--surface2);border-color:var(--border)}
+        .nav-links a.active{color:var(--text);background:var(--surface3);border-color:var(--accent)}
+        .hero{background:linear-gradient(135deg,#1e1b4b 0%,#0f172a 50%,#0a0f1e 100%);padding:48px 40px 36px;border-bottom:1px solid var(--border);position:relative;overflow:hidden}
+        .hero::before{content:'';position:absolute;top:-60px;right:-60px;width:280px;height:280px;background:radial-gradient(circle,rgba(99,102,241,.15) 0%,transparent 70%);border-radius:50%;pointer-events:none}
+        .hero h1{font-size:30px;font-weight:800;letter-spacing:-.5px}
+        .hero p{color:var(--muted);margin-top:6px;font-size:14px}
+        .hero-stats{display:flex;gap:20px;margin-top:24px;flex-wrap:wrap}
+        .stat-pill{background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:30px;padding:8px 18px;font-size:13px;color:var(--muted);display:flex;align-items:center;gap:8px}
+        .stat-pill strong{color:var(--text);font-weight:600}
+        .container{max-width:1400px;margin:0 auto;padding:32px 40px 60px}
+        #toast{position:fixed;top:80px;right:24px;z-index:9999;padding:14px 20px;border-radius:12px;font-size:14px;font-weight:500;display:flex;align-items:center;gap:10px;opacity:0;transform:translateX(40px);transition:all .35s cubic-bezier(.4,0,.2,1);pointer-events:none;min-width:280px;box-shadow:0 8px 32px rgba(0,0,0,.5)}
+        #toast.show{opacity:1;transform:translateX(0)}
+        #toast.success{background:#064e3b;border:1px solid #10b981;color:#6ee7b7}
+        #toast.error{background:#450a0a;border:1px solid #ef4444;color:#fca5a5}
+        .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px;margin-bottom:24px;box-shadow:var(--shadow)}
+        .card.edit-mode{border-color:var(--amber);box-shadow:0 0 0 1px var(--amber),var(--shadow)}
+        .card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+        .card-title{font-size:16px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:10px}
+        .card-title .icon{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:16px}
+        .form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+        .form-group{display:flex;flex-direction:column;gap:7px}
+        .form-group label{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
+        .form-group input{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:14px;color:var(--text);font-family:'Inter',sans-serif;transition:all .2s;outline:none}
+        .form-group input::placeholder{color:#475569}
+        .form-group input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(99,102,241,.15);background:var(--surface3)}
+        .form-group input[readonly]{opacity:.5;cursor:not-allowed}
+        .form-actions{margin-top:22px;display:flex;gap:10px}
+        .btn{display:inline-flex;align-items:center;gap:7px;padding:10px 20px;border-radius:10px;border:none;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;letter-spacing:.2px}
+        .btn:active{transform:scale(.97)}
+        .btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;box-shadow:0 4px 14px rgba(99,102,241,.4)}
+        .btn-primary:hover{opacity:.9;box-shadow:0 6px 20px rgba(99,102,241,.5)}
+        .btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border)}
+        .btn-ghost:hover{background:var(--surface2);color:var(--text)}
+        .btn-icon{padding:7px 12px;border-radius:8px;border:none;font-size:12px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;display:inline-flex;align-items:center;gap:5px}
+        .btn-edit{background:rgba(245,158,11,.12);color:#fbbf24;border:1px solid rgba(245,158,11,.25)}
+        .btn-edit:hover{background:rgba(245,158,11,.22)}
+        .btn-delete{background:rgba(239,68,68,.1);color:#f87171;border:1px solid rgba(239,68,68,.2)}
+        .btn-delete:hover{background:rgba(239,68,68,.2)}
+        .table-wrapper{overflow-x:auto}
+        table{width:100%;border-collapse:collapse;min-width:760px}
+        thead tr{background:linear-gradient(90deg,rgba(99,102,241,.12),rgba(139,92,246,.08));border-bottom:1px solid rgba(99,102,241,.3)}
+        th{padding:14px 16px;text-align:left;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;white-space:nowrap}
+        td{padding:14px 16px;font-size:14px;border-bottom:1px solid var(--border)}
+        tbody tr{transition:background .15s}
+        tbody tr:hover{background:rgba(255,255,255,.03)}
+        tbody tr:last-child td{border-bottom:none}
+        .product-id{font-family:monospace;font-size:12px;background:rgba(99,102,241,.12);color:#a5b4fc;padding:3px 8px;border-radius:5px;border:1px solid rgba(99,102,241,.2)}
+        .price-badge{font-weight:600;color:var(--green)}
+        .stock-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:600}
+        .stock-ok{background:rgba(16,185,129,.1);color:#34d399;border:1px solid rgba(16,185,129,.2)}
+        .stock-low{background:rgba(239,68,68,.1);color:#f87171;border:1px solid rgba(239,68,68,.2)}
+        .actions{display:flex;gap:6px}
+        .empty-state{text-align:center;padding:60px 20px;color:var(--muted)}
+        .empty-state .ei{font-size:48px;margin-bottom:12px}
+        .search-bar{position:relative;width:260px}
+        .search-bar input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:9px 14px 9px 38px;font-size:13px;color:var(--text);outline:none;font-family:'Inter',sans-serif;transition:all .2s}
+        .search-bar input:focus{border-color:var(--accent);background:var(--surface3)}
+        .search-bar .si{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;pointer-events:none}
+        @media(max-width:900px){.form-grid{grid-template-columns:repeat(2,1fr)}.hero,.container{padding-left:20px;padding-right:20px}.navbar{padding:0 20px}}
+        @media(max-width:600px){.form-grid{grid-template-columns:1fr}}
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="navbar-brand">⚡ ElectraStore</div>
+    <div class="nav-links">
+        <a href="/product" class="active">📦 Products</a>
+        <a href="/order">🛒 Orders</a>
+        <a href="/agentic-ai">🤖 AI Assistant</a>
+    </div>
+</nav>
+
+<div class="hero">
+    <h1>📦 Product Management</h1>
+    <p>Manage your electronics inventory — add, update and remove products.</p>
+    <div class="hero-stats">
+        <div class="stat-pill">🗃️ Total <strong>{{ products | length }}</strong></div>
+        <div class="stat-pill">⚠️ Low Stock <strong>{{ products | selectattr("stock", "le", 10) | list | length }}</strong></div>
+    </div>
+</div>
+
+<div id="toast"></div>
+
+<div class="container">
+
+    <div id="productFormCard" class="card">
+        <div class="card-header">
+            <div class="card-title">
+                <div class="icon">✏️</div>
+                <span id="formTitle">Add New Product</span>
+            </div>
+        </div>
+        <form id="productForm">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="product_id">Product ID</label>
+                    <input type="text" id="product_id" name="product_id" maxlength="10" placeholder="e.g. P001" required>
+                </div>
+                <div class="form-group">
+                    <label for="product_name">Product Name</label>
+                    <input type="text" id="product_name" name="product_name" maxlength="150" placeholder="e.g. Dell XPS 15" required>
+                </div>
+                <div class="form-group">
+                    <label for="category">Category</label>
+                    <input type="text" id="category" name="category" maxlength="80" placeholder="e.g. Laptop" required>
+                </div>
+                <div class="form-group">
+                    <label for="brand">Brand</label>
+                    <input type="text" id="brand" name="brand" maxlength="80" placeholder="e.g. Dell" required>
+                </div>
+                <div class="form-group">
+                    <label for="price">Price (&#8377;)</label>
+                    <input type="number" id="price" name="price" min="0" step="0.01" placeholder="e.g. 75000" required>
+                </div>
+                <div class="form-group">
+                    <label for="stock">Stock Units</label>
+                    <input type="number" id="stock" name="stock" min="0" placeholder="e.g. 25" required>
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="submit" id="submitButton" class="btn btn-primary">&#x2795; Add Product</button>
+                <button type="button" id="cancelButton" class="btn btn-ghost" style="display:none;" onclick="cancelEdit()">&#x2715; Cancel</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">
+                <div class="icon">&#x1F4CB;</div>
+                <span>All Products</span>
+            </div>
+            <div class="search-bar">
+                <span class="si">&#x1F50D;</span>
+                <input type="text" id="searchInput" placeholder="Search products..." oninput="filterTable()">
+            </div>
+        </div>
+        <div class="table-wrapper">
+            <table id="productTable">
+                <thead>
+                    <tr>
+                        <th>Product ID</th><th>Name</th><th>Category</th><th>Brand</th><th>Price</th><th>Stock</th><th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="productTableBody">
+                    {% if products %}
+                        {% for product in products %}
+                        <tr>
+                            <td><span class="product-id">{{ product.product_id }}</span></td>
+                            <td style="font-weight:500">{{ product.product_name }}</td>
+                            <td style="color:var(--muted)">{{ product.category }}</td>
+                            <td style="color:var(--muted)">{{ product.brand }}</td>
+                            <td><span class="price-badge">&#8377;{{ "%.2f"|format(product.price) }}</span></td>
+                            <td>
+                                {% if product.stock <= 10 %}
+                                    <span class="stock-badge stock-low">&#x26A0; {{ product.stock }}</span>
+                                {% else %}
+                                    <span class="stock-badge stock-ok">&#x2713; {{ product.stock }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="actions">
+                                    <button class="btn-icon btn-edit" onclick='editProduct({{ product.product_id|tojson }},{{ product.product_name|tojson }},{{ product.category|tojson }},{{ product.brand|tojson }},{{ product.price|tojson }},{{ product.stock|tojson }})'>&#x270F; Edit</button>
+                                    <button class="btn-icon btn-delete" onclick='deleteProduct({{ product.product_id|tojson }})'>&#x1F5D1; Delete</button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr><td colspan="7"><div class="empty-state"><div class="ei">&#x1F4ED;</div><p>No products found. Add your first product above.</p></div></td></tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<script>
+function showToast(msg,type='success'){
+    const t=document.getElementById('toast');
+    t.textContent=(type==='success'?'✓ ':'✕ ')+msg;
+    t.className='show '+type;
+    setTimeout(()=>{t.className=''},4200);
+}
+function filterTable(){
+    const q=document.getElementById('searchInput').value.toLowerCase();
+    document.querySelectorAll('#productTableBody tr').forEach(r=>{
+        r.style.display=r.textContent.toLowerCase().includes(q)?'':'none';
+    });
+}
+document.getElementById('productForm').addEventListener('submit',async function(e){
+    e.preventDefault();
+    const pid=document.getElementById('product_id').value.trim();
+    const pnm=document.getElementById('product_name').value.trim();
+    const prc=parseFloat(document.getElementById('price').value);
+    const stk=parseInt(document.getElementById('stock').value);
+    if(!pid)return showToast('Product ID is required.','error');
+    if(!pnm)return showToast('Product Name is required.','error');
+    if(isNaN(prc)||prc<0)return showToast('Price must be 0 or greater.','error');
+    if(isNaN(stk)||stk<0)return showToast('Stock must be 0 or greater.','error');
+    const isEdit=document.getElementById('submitButton').dataset.mode==='edit';
+    const btn=document.getElementById('submitButton');
+    btn.disabled=true;btn.textContent='Saving...';
+    try{
+        const res=await fetch(isEdit?'/product/update':'/product/add',{method:'POST',body:new FormData(this)});
+        const d=await res.json();
+        if(!res.ok)throw new Error(d.detail||'Something went wrong.');
+        showToast(d.message||'Success!');
+        setTimeout(()=>location.reload(),900);
+    }catch(err){
+        showToast(err.message,'error');
+        btn.disabled=false;
+        btn.textContent=isEdit?'Save Update':'+ Add Product';
+    }
+});
+function editProduct(pid,pnm,cat,brand,price,stock){
+    document.getElementById('product_id').value=pid;
+    document.getElementById('product_name').value=pnm;
+    document.getElementById('category').value=cat;
+    document.getElementById('brand').value=brand;
+    document.getElementById('price').value=price;
+    document.getElementById('stock').value=stock;
+    document.getElementById('formTitle').textContent='Edit Product';
+    document.getElementById('submitButton').textContent='Save Update';
+    document.getElementById('submitButton').dataset.mode='edit';
+    document.getElementById('cancelButton').style.display='inline-flex';
+    document.getElementById('product_id').readOnly=true;
+    document.getElementById('productFormCard').classList.add('edit-mode');
+    document.getElementById('productFormCard').scrollIntoView({behavior:'smooth'});
+}
+function cancelEdit(){
+    document.getElementById('productForm').reset();
+    document.getElementById('formTitle').textContent='Add New Product';
+    document.getElementById('submitButton').textContent='+ Add Product';
+    delete document.getElementById('submitButton').dataset.mode;
+    document.getElementById('cancelButton').style.display='none';
+    document.getElementById('product_id').readOnly=false;
+    document.getElementById('productFormCard').classList.remove('edit-mode');
+}
+async function deleteProduct(pid){
+    if(!confirm(`Delete product ${pid}? This cannot be undone.`))return;
+    try{
+        const res=await fetch(`/product/delete/${encodeURIComponent(pid)}`,{method:'DELETE'});
+        const d=await res.json();
+        if(!res.ok)throw new Error(d.detail||'Unable to delete.');
+        showToast(d.message||'Product deleted.');
+        setTimeout(()=>location.reload(),900);
+    }catch(err){showToast(err.message,'error');}
+}
+</script>
+</body>
+</html>

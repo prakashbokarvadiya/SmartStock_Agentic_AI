@@ -1,0 +1,70 @@
+# ============================================================
+# SmartStock Agentic AI — docker-compose.yml
+# Usage:
+#   docker compose up --build         (first time)
+#   docker compose up -d              (background)
+#   docker compose logs -f app        (live logs)
+#   docker compose down               (stop)
+# ============================================================
+
+services:
+
+  # ── Main Application ────────────────────────────────────────
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    container_name: smartstock_app
+    image: smartstock-agentic-ai:latest
+
+    # Load secrets from .env file (never commit real .env)
+    env_file:
+      - .env
+
+    # Override specific env vars here if needed
+    environment:
+      - PYTHONUNBUFFERED=1
+
+    ports:
+      - "8000:8000"   # HOST:CONTAINER — access via http://localhost:8000
+
+    volumes:
+      # Persist ChromaDB vector store across restarts
+      - chat_memory:/app/chat_memory
+      # Mount Gmail OAuth token (generated once via email_automate.py setup)
+      - ./token.pickle:/app/token.pickle:rw
+      # Mount credentials.json for Gmail OAuth
+      - ./credentials.json:/app/credentials.json:ro
+
+    restart: unless-stopped
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+    networks:
+      - smartstock_net
+
+
+# ── Named Volumes ────────────────────────────────────────────
+volumes:
+  chat_memory:
+    driver: local
+    name: smartstock_chat_memory
+
+
+# ── Networks ─────────────────────────────────────────────────
+networks:
+  smartstock_net:
+    driver: bridge
+    name: smartstock_network

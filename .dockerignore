@@ -1,0 +1,50 @@
+# ── Python cache ──────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+.Python
+
+# ── Virtual environments ──────────────────────────────────────
+.venv/
+venv/
+env/
+ENV/
+
+# ── Environment / Secrets (NEVER bake into image) ────────────
+.env
+.env.*
+*.env
+
+# ── Gmail OAuth token (persisted via volume mount, not baked in)
+token.pickle
+
+# ── ChromaDB vector store (persisted via volume mount) ────────
+chat_memory/
+
+# ── IDE / OS junk ─────────────────────────────────────────────
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# ── Test / dev scripts ────────────────────────────────────────
+test.py
+1.txt
+scratch/
+
+# ── CSV data files (seed data — not needed at runtime) ────────
+*.csv
+
+# ── Byte-compiled / optimized ─────────────────────────────────
+*.egg-info/
+dist/
+build/
+*.egg
+
+# ── Logs ──────────────────────────────────────────────────────
+*.log
+logs/

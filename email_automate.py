@@ -44,16 +44,17 @@ POSTGRES_DATABASE    = os.getenv("POSTGRES_DATABASE", "")
 POSTGRES_PORT        = int(os.getenv("POSTGRES_PORT", "5432"))
 
 # SMTP configuration (Recommended for Render / Docker / Cloud)
-SMTP_SERVER          = os.getenv("SMTP_SERVER", "smtp.gmail.com")
+SMTP_SERVER          = os.getenv("SMTP_SERVER", "smtp.gmail.com").strip()
 SMTP_PORT            = int(os.getenv("SMTP_PORT", "587"))
-SMTP_USER            = os.getenv("SMTP_USER") or os.getenv("EMAIL_USER") or ADMIN_EMAIL
+ADMIN_EMAIL          = os.getenv("ADMIN_EMAIL", "thakorhim@gmail.com").strip()
+SMTP_USER            = (os.getenv("SMTP_USER") or os.getenv("EMAIL_USER") or ADMIN_EMAIL).strip()
 SMTP_PASSWORD        = (
     os.getenv("SMTP_PASSWORD")
     or os.getenv("GMAIL_APP_PASSWORD")
     or os.getenv("EMAIL_PASSWORD")
     or os.getenv("EMAIL_APP_PASSWORD")
     or ""
-)
+).replace(" ", "").strip()
 
 # Gmail OAuth configuration (Alternative for OAuth flows)
 BASE_DIR             = Path(__file__).resolve().parent

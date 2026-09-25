@@ -70,15 +70,10 @@ ENV PYTHONUNBUFFERED=1 \
 
 # Health check — calls /health endpoint
 HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
-    CMD curl -f http://localhost:8000/health || exit 1
+    CMD curl -f http://localhost:${PORT:-8000}/health || exit 1
 
-# Expose the FastAPI port
+# Expose default port
 EXPOSE 8000
 
-# ── Entrypoint: production-grade uvicorn (no --reload in prod) ──
-CMD ["uvicorn", "app:app", \
-     "--host", "0.0.0.0", \
-     "--port", "8000", \
-     "--workers", "1", \
-     "--log-level", "info", \
-     "--timeout-keep-alive", "30"]
+# ── Entrypoint: production-grade uvicorn (supports dynamic $PORT for Render / cloud) ──
+CMD ["sh", "-c", "uvicorn app:app --host 0.0.0.0 --port ${PORT:-8000} --workers 1 --log-level info --timeout-keep-alive 30"]

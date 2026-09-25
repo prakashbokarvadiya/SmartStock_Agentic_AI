@@ -44,9 +44,11 @@ mcp = FastMCP(
 if DATABASE_URL:
     _db_url = DATABASE_URL
     if _db_url.startswith("postgres://"):
-        _db_url = _db_url.replace("postgres://", "postgresql://", 1)
+        _db_url = _db_url.replace("postgres://", "postgresql+psycopg2://", 1)
+    elif _db_url.startswith("postgresql://"):
+        _db_url = _db_url.replace("postgresql://", "postgresql+psycopg2://", 1)
 else:
-    _db_url = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DATABASE}"
+    _db_url = f"postgresql+psycopg2://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DATABASE}"
 
 _db_engine = create_engine(_db_url, pool_size=10, max_overflow=5, pool_recycle=300)
 
